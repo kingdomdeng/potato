@@ -1,11 +1,11 @@
 <template>
   <el-dialog :title="title" v-model="visible" @open="open()" @close="close()">
-    <el-form ref="form" :model="form" :disabled="isView" label-width="80px" size="small">
-      <el-form-item label="应用名">
+    <el-form ref="form" :model="form" :rules="formRules" :disabled="isView" label-width="80px">
+      <el-form-item label="应用名" prop="appId">
         <el-input v-model="form.appId"></el-input>
       </el-form-item>
 
-      <el-form-item label="名称">
+      <el-form-item label="名称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
 
@@ -23,11 +23,15 @@
     </el-form>
 
     <div slot="footer" class="dialog-footer">
-      <el-button size="small" @click="close">关 闭</el-button>
-      <el-button v-if="!isView" type="primary" size="small" @click="onSubmit()">确 定</el-button>
+      <el-button @click="close">关 闭</el-button>
+      <el-button v-if="!isView" type="primary" @click="onSubmit()">确 定</el-button>
     </div>
   </el-dialog>
 </template>
+
+<script setup>
+import { formRules } from '../utils/validate'
+</script>
 
 <script>
 const ACTION_TYPE = {
@@ -38,8 +42,9 @@ const ACTION_TYPE = {
 
 export default {
   name: 'IndexDialog',
+  emits: ['update:modelValue'],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
@@ -59,7 +64,7 @@ export default {
     }
   },
   watch: {
-    value (val) {
+    modelValue (val) {
       this.visible = val
     },
     type (val) {
@@ -96,21 +101,36 @@ export default {
     close () {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
-      this.$emit('input', false)
+      this.$refs.form && this.$refs.form.resetFields()
+      this.$emit('update:modelValue', false)
     },
     onSubmit () {
-      let fn = this.isAdd ? 'create' : 'update'
+      this.verify().then(() => {
+        let fn = this.isAdd ? 'create' : 'update'
 
-      this.$api.role[fn](this.form).then(res => {
-        this.$message({
-          type: 'success',
-          message: `${this.title}成功`,
+        this.$api.role[fn](this.form).then(res => {
+          this.$message({
+            type: 'success',
+            message: `${this.title}成功`,
+          })
+          this.close()
+          // 刷新列表
+          this.$emit('callback')
         })
-        this.close()
-        // 刷新列表
-        this.$emit('callback')
-      })
+      }).catch(() => {})
     },
+    verify() {
+      let form = this.$refs.form
+      return new Promise((res, rej) => {
+        form.validate((valid) => {
+          if (valid) {
+            res(true)
+          } else {
+            rej(false)
+          }
+        })
+      })
+    }
   },
 }
 </script>

@@ -4,6 +4,7 @@ import menu from '@/views/menu/router'
 import user from '@/views/user/router'
 import role from '@/views/role/router'
 import notice from '@/views/notice/router'
+import log from '@/views/log/router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,7 @@ const router = createRouter({
         ...user,
         ...role,
         ...notice,
+        ...log,
       ],
     },
     {

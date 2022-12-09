@@ -2,59 +2,60 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
 ### node 版本： Vite 需要 Node.js 版本 14.18+，16+
 https://nodejs.org/dist/
 
-## Project Setup
+### 如果单文件SFC中需要写JSX的语法时，需要加： lang="jsx"
+例子：views/notice/index.vue: getNoticeProgress
 
-```sh
-npm install
+```
+<script lang="jsx">
+    export default {
+        setup() {
+            return () => (
+                <div>
+                    <otherComponent />
+                </div>
+            )
+        }
+    }
+</script>
 ```
 
-### Compile and Hot-Reload for Development
+### 配置文件
+#### package.json
+-略
 
-```sh
-npm run dev
-```
+#### vite.config.js
+1. 开发、打包、代理转发等配置
+2. 和vue2的底层服务换了很多：例如proxy：vite使用node-http-proxy， webpack：http-proxy-middleware，
+没有router功能；rewrite的写法也不一样
+3. scss导入了全局的变量文件variables.scss
+4. resolve增加.vue的导入，默认是没有的（即需要导入的时候主动写上xxx.vue）
 
-### Compile and Minify for Production
+#### src/api
+1. 统一管理api
+2. 已在在入口main.js中，绑定到vue的实例中，使用： this.$api.menu.xxx
 
-```sh
-npm run build
-```
+#### src/component
+1. 公共组件，多个文件组成的组件用文件夹
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+#### src/main.js
+1. 入口文件
 
-```sh
-npm run test:unit
-```
+#### src/views
+1. 有独立模块的router、stores、components方便模块迁移
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+#### src/router
+1. 路由集合
 
-```sh
-npm run test:e2e:dev
-```
+#### src/configs/axios
+1. axios配置相关
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+#### src/stores
+1. 全局状态集合
+2. 可以用pinia或vuex
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+#### src/utils
+1. 工具类，mixins等
+2. mixin的变量、方法最好带有前缀

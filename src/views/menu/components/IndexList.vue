@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-tool">
-      <el-button type="primary" size="small" @click="openDialog('add')">新增</el-button>
+      <el-button type="primary" @click="openDialog('add')">新增</el-button>
       <el-link
         type="primary"
         href="/api/menu/download"
@@ -23,7 +23,7 @@
         <el-table-column prop="remark" label="备注"/>
         <el-table-column prop="createTime" label="创建时间" width="180"/>
         <el-table-column prop="updateTime" label="更新时间" width="180"/>
-        <el-table-column label="操作">
+       <el-table-column label="操作" width="200" fixed="right">
           <template v-slot="scope">
             <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">编辑</el-button>
             <el-button type="primary" text size="small" @click="handleDelete(scope.row.menuId)">删除</el-button>
@@ -42,19 +42,19 @@
       />
     </div>
 
-    <IndexDialog v-model="dialogShow" :option="dialogOption" @callback="$pageMixin_search"></IndexDialog>
+    <IndexListDialog v-model="dialogShow" :option="dialogOption" @callback="$pageMixin_search"></IndexListDialog>
   </div>
 </template>
 
 <script>
 import pageMixin from '@/utils/pageMixin'
-import IndexDialog from '@/views/menu/components/IndexListDialog'
+import IndexListDialog from '@/views/menu/components/IndexListDialog'
 
 export default {
   name: 'IndexList',
   mixins: [pageMixin],
   components: {
-    IndexDialog
+    IndexListDialog
   },
   data () {
     return {

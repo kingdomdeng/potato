@@ -65,7 +65,7 @@ import IndexDialog from '@/views/notice/components/IndexDialog'
 import BindMenuDialog from '@/views/role/components/BindMenuDialog'
 
 export default {
-  name: 'Notice',
+  name: 'Log',
   mixins: [pageMixin],
   components: {
     IndexDialog,

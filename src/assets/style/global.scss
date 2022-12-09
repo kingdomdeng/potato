@@ -36,3 +36,10 @@ body,
     }
   }
 }
+
+.el-dialog {
+  .dialog-footer {
+    margin-top: 2 * $m;
+    text-align: right;
+  }
+}

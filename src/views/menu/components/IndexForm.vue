@@ -1,17 +1,17 @@
 <template>
   <div class="index-form">
-    <h4>{{ title }}</h4>
+    <h4 v-if="showTitle">{{ title }}</h4>
 
-    <el-form ref="form" :model="form" :disabled="isView" label-width="100px" size="small">
-      <el-form-item label="应用名">
+    <el-form ref="form" :model="form" :rules="formRules" :disabled="isView" label-width="100px">
+      <el-form-item label="应用名" prop="appId">
         <el-input v-model="form.appId"></el-input>
       </el-form-item>
 
-      <el-form-item label="菜单名称">
+      <el-form-item label="菜单名称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
 
-      <el-form-item label="父级菜单">
+      <el-form-item label="父级菜单" prop="parentId">
         <el-select v-model="form.parentId" placeholder="请选择" style="width: 100%" clearable>
           <!--<el-option label="空" value=""></el-option>-->
           <el-option
@@ -23,11 +23,11 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="图标">
+      <el-form-item label="图标" prop="icon">
         <el-input v-model="form.icon"></el-input>
       </el-form-item>
 
-      <el-form-item label="url">
+      <el-form-item label="url" prop="url">
         <el-input v-model="form.url"></el-input>
       </el-form-item>
 
@@ -43,12 +43,16 @@
       </el-form-item>
 
       <el-form-item label="">
-        <el-button v-if="!isView" type="primary" size="small" @click="onSubmit()">确 定</el-button>
-        <el-button size="small" @click="close">取 消</el-button>
+        <el-button v-if="!isView" type="primary" @click="onSubmit">确 定</el-button>
+        <el-button @click="close">取 消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
+
+<script setup>
+import { formRules } from '../utils/validate'
+</script>
 
 <script>
 const ACTION_TYPE = {
@@ -60,7 +64,11 @@ const ACTION_TYPE = {
 export default {
   name: 'IndexForm',
   props: {
-    option: Object
+    option: Object,
+    showTitle: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -145,28 +153,44 @@ export default {
 
       Object.keys(data).forEach(attr => {
         if (this.form.hasOwnProperty(attr)) {
-          this.$set(this.form, attr, data[attr])
+          // this.$set(this.form, attr, data[attr])
+          this.form[attr] = data[attr]
         }
       })
     },
     close () {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
+      this.$refs.form && this.$refs.form.resetFields()
       this.$emit('input', false)
     },
     onSubmit () {
-      let fn = this.isAdd ? 'create' : 'update'
+      this.verify().then(() => {
+        let fn = this.isAdd ? 'create' : 'update'
 
-      this.$api.menu[fn](this.form).then(res => {
-        this.$message({
-          type: 'success',
-          message: `${this.title}成功`,
+        this.$api.menu[fn](this.form).then(res => {
+          this.$message({
+            type: 'success',
+            message: `${this.title}成功`,
+          })
+          this.close()
+          // 刷新列表
+          this.$emit('callback')
         })
-        this.close()
-        // 刷新列表
-        this.$emit('callback')
-      })
+      }).catch(() => {})
     },
+    verify() {
+      let form = this.$refs.form
+      return new Promise((res, rej) => {
+        form.validate((valid) => {
+          if (valid) {
+            res(true)
+          } else {
+            rej(false)
+          }
+        })
+      })
+    }
   }
 }
 </script>

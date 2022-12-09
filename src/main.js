@@ -18,7 +18,10 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus, { locale: zhCn })
+app.use(ElementPlus, {
+  locale: zhCn,
+  size: 'default'
+})
 app.component(RenderVNode.name, RenderVNode)
 app.config.globalProperties.$api = api
 

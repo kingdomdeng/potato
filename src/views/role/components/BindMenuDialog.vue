@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="title" v-model="visible" @open="open()" @close="close()">
-    <el-form ref="form" :model="form" :disabled="isView" label-width="80px" size="small">
+    <el-form ref="form" :model="form" :disabled="isView" label-width="80px">
       <el-form-item label="应用名">
         <el-input v-model="form.appId" disabled></el-input>
       </el-form-item>
@@ -28,8 +28,8 @@
     </el-form>
 
     <div slot="footer" class="dialog-footer">
-      <el-button size="small" @click="close">关 闭</el-button>
-      <el-button v-if="!isView" type="primary" size="small" @click="onSubmit()">确 定</el-button>
+      <el-button @click="close">关 闭</el-button>
+      <el-button v-if="!isView" type="primary" @click="onSubmit()">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -45,8 +45,9 @@ const ACTION_TYPE = {
 export default {
   name: 'BindMenuDialog',
   mixins: [treeMixin],
+  emits: ['update:modelValue'],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
@@ -65,7 +66,7 @@ export default {
     }
   },
   watch: {
-    value (val) {
+    modelValue (val) {
       this.visible = val
     },
     type (val) {
@@ -94,7 +95,7 @@ export default {
     close () {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
-      this.$emit('input', false)
+      this.$emit('update:modelValue', false)
     },
     onSubmit () {
       let menuIds = this.$refs.tree.getCheckedKeys()

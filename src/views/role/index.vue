@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-tool">
-      <el-button type="primary" size="small" @click="openDialog('add')">新增</el-button>
+      <el-button type="primary" @click="openDialog('add')">新增</el-button>
     </div>
 
     <div class="page-content">
@@ -17,7 +17,7 @@
         <el-table-column prop="remark" label="备注"/>
         <el-table-column prop="createTime" label="创建时间" width="180"/>
         <el-table-column prop="updateTime" label="更新时间" width="180"/>
-        <el-table-column label="操作">
+       <el-table-column label="操作" width="200" fixed="right">
           <template v-slot="scope">
             <el-button type="primary" text size="small" @click="openDialog('edit', scope.row.roleId)">编辑</el-button>
             <el-button type="primary" text size="small" @click="openBindMenuDialog(scope.row)">菜单</el-button>

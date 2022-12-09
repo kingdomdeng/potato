@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="title" v-model="visible" @open="open()" @close="close()">
-    <IndexForm :option="option"></IndexForm>
+    <IndexForm :option="option" :show-title="false"></IndexForm>
   </el-dialog>
 </template>
 
@@ -18,8 +18,9 @@ export default {
   components: {
     IndexForm
   },
+  emits: ['update:modelValue'],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
@@ -33,7 +34,7 @@ export default {
     }
   },
   watch: {
-    value (val) {
+    modelValue (val) {
       this.visible = val
     },
     type (val) {
@@ -61,7 +62,7 @@ export default {
     close () {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
-      this.$emit('input', false)
+      this.$emit('update:modelValue', false)
     },
   },
 }

@@ -1,7 +1,4 @@
 // menu 树组件
-
-import { findUserMenu } from '@/api/menu'
-
 export default {
   data () {
     return {

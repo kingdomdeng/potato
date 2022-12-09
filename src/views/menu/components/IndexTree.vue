@@ -3,7 +3,7 @@
     <div class="page-content menu-tree-content">
       <div class="menu-tree-left">
         <div class="menu-tree-header">
-          <el-select v-model="appSelected" placeholder="请选择" size="small" @change="refresh">
+          <el-select v-model="appSelected" placeholder="请选择" @change="refresh">
             <el-option
               v-for="item in appList"
               :key="item.id"
@@ -13,7 +13,7 @@
           </el-select>
 
           <div class="tool">
-            <el-button size="small" icon="el-icon-plus" title="新增" @click="handleAppend">
+            <el-button :icon="Plus" title="新增" @click="handleAppend">
               <!--新增-->
             </el-button>
           </div>
@@ -30,13 +30,13 @@
           <span class="menu-tree-node">
             <span class="name">{{ data.name }}</span>
             <span class="tool">
-              <el-button size="small" icon="el-icon-plus" title="新增" @click.stop="handleAppend(data)">
+              <el-button :icon="Plus" title="新增" @click.stop="handleAppend(data)">
                 <!--新增-->
               </el-button>
-              <el-button size="small" icon="el-icon-edit" title="编辑" @click.stop="handleEdit(data)">
+              <el-button :icon="Edit" title="编辑" @click.stop="handleEdit(data)">
                 <!--编辑-->
               </el-button>
-              <el-button size="small" icon="el-icon-minus" title="删除" @click.stop="handleDelete(data.menuId)">
+              <el-button :icon="Minus" title="删除" @click.stop="handleDelete(data.menuId)">
                 <!--删除-->
               </el-button>
             </span>
@@ -50,6 +50,10 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { Plus, Edit, Minus } from '@element-plus/icons-vue'
+</script>
 
 <script>
 import treeMixin from '@/utils/treeMixin'
@@ -140,10 +144,15 @@ export default {
       .tool {
        :deep() {
           .el-button {
-            padding: 0;
+            padding: 0 2px;
             width: 18px;
             height: 18px;
             line-height: 18px;
+            justify-content: initial;
+
+            .el-icon {
+              font-size: $ft12;
+            }
           }
         }
       }
@@ -169,10 +178,15 @@ export default {
 
        :deep() {
           .el-button {
-            padding: 0;
+            padding: 0 2px;
             width: 18px;
             height: 18px;
             line-height: 18px;
+            justify-content: initial;
+
+            .el-icon {
+              font-size: $ft12;
+            }
           }
 
           .el-button+.el-button {

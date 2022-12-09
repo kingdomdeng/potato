@@ -41,7 +41,9 @@
                     :index="item.name"
                     :route="item.route"
                 >
-                  <i :class="item.icon"></i>
+                  <el-icon>
+                    <component :is="ElementIcon[item.icon]"></component>
+                  </el-icon>
                   <span slot="title">{{ item.title }}</span>
                 </el-menu-item>
               </el-menu>
@@ -51,11 +53,13 @@
 
         <el-main :class="{ isShowNotice }">
           <!-- 公告 -->
-          <el-alert class="notice" type="info" @close="isShowNotice = false" show-icon>
-            <template v-slot:title>
-              消息提示的文案
-            </template>
-          </el-alert>
+          <div>
+            <el-alert class="notice" type="info" @close="isShowNotice = false" show-icon>
+              <template v-slot:title>
+                消息提示的文案
+              </template>
+            </el-alert>
+          </div>
 
           <div class="container-view">
             <!-- 主内容 -->
@@ -68,7 +72,8 @@
 </template>
 
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+// import {HelpFilled, User, Notification, Menu, Notebook } from '@element-plus/icons-vue'
+import * as ElementIcon from '@element-plus/icons-vue'
 </script>
 
 <script>
@@ -82,10 +87,11 @@ export default {
       defaultActive: 'menu',
       isShowNotice: true,
       menuList: [
-        { title: '菜单管理', name: 'menu', route: { name: 'menu' }, icon: 'el-icon-setting' },
-        { title: '用户管理', name: 'user', route: { name: 'user' }, icon: 'el-icon-setting' },
-        { title: '角色管理', name: 'role', route: { name: 'role' }, icon: 'el-icon-setting' },
-        { title: '公告管理', name: 'notice', route: { name: 'notice' }, icon: 'el-icon-setting' },
+        { title: '菜单管理', name: 'menu', route: { name: 'menu' }, icon: 'Menu' },
+        { title: '用户管理', name: 'user', route: { name: 'user' }, icon: 'User' },
+        { title: '角色管理', name: 'role', route: { name: 'role' }, icon: 'HelpFilled' },
+        { title: '公告管理', name: 'notice', route: { name: 'notice' }, icon: 'Notification' },
+        { title: '日志管理', name: 'log', route: { name: 'log' }, icon: 'Notebook' },
       ]
     }
   },
