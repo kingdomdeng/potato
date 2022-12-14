@@ -13,6 +13,7 @@ import './assets/main.css'
 import './assets/style/global.scss'
 
 import RenderVNode from '@/components/RenderVNode'
+import mouseDirective from '@/utils/mouseDirective'
 
 const app = createApp(App)
 
@@ -23,6 +24,7 @@ app.use(ElementPlus, {
   size: 'default'
 })
 app.component(RenderVNode.name, RenderVNode)
+app.directive('mouseDirective', mouseDirective)
 app.config.globalProperties.$api = api
 
 app.mount('#app')

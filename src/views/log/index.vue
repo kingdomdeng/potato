@@ -1,34 +1,21 @@
 <template>
-  <div class="page-container">
-    <div class="page-tool">
+  <div class="page-container page-container-flex">
+    <!--<div class="page-tool">
       <el-button type="primary" @click="openDialog('add', {})">新增</el-button>
-    </div>
+    </div>-->
 
     <div class="page-content">
-      <el-table :data="tableData" style="width: 100%" border>
+      <el-table :data="tableData" :row-class-name="tableRowClassName" style="width: 100%" border>
         <el-table-column type="index" label="#" fixed/>
-        <el-table-column prop="appId" label="应用ID" fixed/>
-        <el-table-column prop="title" label="标题" fixed/>
-        <el-table-column prop="disabled" label="是否禁用">
-          <template v-slot="scope">
-            {{ scope.row.disabled ? "是" : "否" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="content" label="内容"/>
-        <el-table-column prop="remark" label="备注"/>
-        <el-table-column prop="target" label="生效对象">全体</el-table-column>
-        <el-table-column prop="validTime" label="有效时间" width="180">
-          <template v-slot="scope">
-            <RenderVNode :vnode="getNoticeProgress(scope.row)"></RenderVNode>
-          </template>
-        </el-table-column>
+        <el-table-column prop="userName" label="用户名" fixed/>
+        <el-table-column prop="action" label="动作"/>
+        <el-table-column prop="level" label="等级"/>
+        <el-table-column prop="device" label="IP/设备" fixed/>
         <el-table-column prop="createTime" label="创建时间" width="180"/>
         <!--<el-table-column prop="updateTime" label="更新时间" width="180"/>-->
-       <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="100" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">编辑</el-button>
-            <!--<el-button type="primary" text size="small" @click="openBindMenuDialog(scope.row)">菜单</el-button>-->
-            <el-button type="primary" text size="small" @click="handleDelete(scope.row.noticeId)">删除</el-button>
+            <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,56 +31,46 @@
       />
     </div>
 
-    <IndexDialog
-      v-model="dialogShow"
-      :option="dialogOption"
-      @callback="$pageMixin_search"
-    ></IndexDialog>
-
-    <BindMenuDialog
-      v-model="bindRoleDialogShow"
-      :option="bindRoleDialogOption"
-      @callback="getTableData"
-    ></BindMenuDialog>
+    <IndexDialog v-model="dialogShow" :option="dialogOption"></IndexDialog>
   </div>
 </template>
 
 <script lang="jsx">
-import { h } from 'vue'
 import pageMixin from '@/utils/pageMixin'
-import IndexDialog from '@/views/notice/components/IndexDialog'
-import BindMenuDialog from '@/views/role/components/BindMenuDialog'
+import IndexDialog from '@/views/log/components/IndexDialog'
 
 export default {
   name: 'Log',
   mixins: [pageMixin],
   components: {
     IndexDialog,
-    BindMenuDialog
   },
   data () {
     return {
       dialogShow: false,
       dialogOption: {},
-      bindRoleDialogShow: false,
-      bindRoleDialogOption: {},
       tableData: [],
+      tableProps: [
+        { name: '用户名', prop: 'userName', fixed: false, default: true },
+        { name: '动作', prop: 'action', fixed: false, default: true },
+        { name: '等级', prop: 'level', fixed: false, default: true },
+        { name: 'IP/设备', prop: 'device', fixed: false, default: true },
+        { name: '创建时间', prop: 'createTime', fixed: false, default: true },
+      ],
     }
   },
   created () {
     // this.getTableData()
+    let levelArr = ['success','info','warning','danger']
+    let actionArr = ['add','edit','delete','stop','start']
 
     let i = 0
     while (i < 10) {
       this.tableData.push({
-        appId: 1,
-        noticeId: i,
-        title: i,
-        content: `内容${i}`,
-        disabled: 0,
-        validTime: i < 3 ? ['2022-12-07 10:10:00', '2022-12-09 10:10:00'] : null,
-        target: '生效对象',
-        remark: '备注',
+        userName: `用户${ i }`,
+        action: actionArr[Math.floor(Math.random()*5)], // add/edit/delete/stop/start
+        level: levelArr[Math.floor(Math.random()*4)], // success/info/warning/danger
+        device: `8.8.8.8 / 谷歌浏览器`,
         createTime: '2022-12-07 10:10:00',
       })
       i++
@@ -118,76 +95,35 @@ export default {
         data: JSON.parse(JSON.stringify(data))
       }
     },
-    handleDelete (id) {
-      this.$api.role.remove(id).then(res => {
-        if (res.data) {
-          this.$message.success('删除成功')
-          this.getTableData()
-        } else {
-          this.$message.error('删除失败')
-        }
-      })
+    tableRowClassName({row, rowIndex}) {
+      return `${ row.level }-row`
     },
-    openBindMenuDialog (menuDo) {
-      this.bindRoleDialogShow = true
-      this.bindRoleDialogOption = {
-        type: 'edit',
-        data: {
-          ...menuDo
-        }
-      }
-    },
-    getNoticeProgress (item) {
-      if (!item.validTime) {
-        return null
-      }
-
-      let percentage = this.getProcessPercent(item.createTime, item.validTime)
-      let status = 0
-      let map = {
-        0: '未开始',
-        1: '进行中',
-        2: '已暂停',
-      }
-
-      if (percentage) {
-        status = 1
-      }
-
-      if (item.disabled) {
-        status = 2
-      }
-
-      if (percentage && percentage > 100) {
-        return null
-      }
-
-      let createElement = h
-      let vnode = createElement({
-        render() {
-          return (
-            <div>
-              <span style="display: block;text-align: center;font-size: 12px;">{ map[status] }</span>
-              <el-progress
-                text-inside={true}
-                stroke-width={16}
-                percentage={percentage}
-              ></el-progress>
-            </div>
-          )
-        }
-      })
-
-      return vnode
-    },
-    getProcessPercent (createTime, validTime) {
-      let [start, end] = validTime
-      let now = Date.now()
-      start = new Date(start).getTime()
-      end = new Date(end).getTime()
-
-      return Math.floor((now - start) / (end - start) * 100)
-    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  :deep() {
+    .el-table tr {
+      &.success-row, &.success-row .el-table__cell {
+        //background-color: #d1edc4!important;
+        background-color: #e1f3d8!important;
+      }
+
+      &.info-row, &.info-row .el-table__cell {
+        //background-color: #dedfe0!important;
+        background-color: #e9e9eb!important;
+      }
+
+      &.warning-row, &.warning-row .el-table__cell {
+        //background-color: #f8e3c5!important;
+        background-color: #faecd8!important;
+      }
+
+      &.danger-row, &.danger-row .el-table__cell {
+        //background-color: #fcd3d3!important;
+        background-color: #fde2e2!important;
+      }
+    }
+  }
+</style>

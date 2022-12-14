@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName">
+  <el-tabs v-model="activeName" class="tab-page-container">
     <el-tab-pane label="列表" name="list" lazy>
       <IndexList></IndexList>
     </el-tab-pane>
@@ -28,5 +28,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.tab-page-container {
+  padding: 15px;
+  flex: 1;
+  .page-container {
+    padding: 0!important;
+  }
+}
 </style>

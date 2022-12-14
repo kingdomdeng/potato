@@ -135,12 +135,24 @@ export default {
     .el-main {
       position: relative;
       padding: 0;
-      padding-bottom: 30px;
+      //padding-bottom: 30px;
+      display: flex;
+      flex-direction: column;
 
       .container-view {
-        padding: 15px;
+        //padding: 15px;
+        display: flex;
+        //flex-direction: column;
         overflow: auto;
+        overflow-y: overlay;
         flex: 1;
+
+        .page-container {
+          padding: 15px;
+          flex: 1;
+          width: 100%;
+          box-sizing: border-box;
+        }
       }
 
       &.isShowNotice {
