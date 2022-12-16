@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "mock": "vite --mode mock",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",
@@ -29,6 +30,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.3.0",
     "jsdom": "^20.0.3",
+    "mockjs": "^1.1.0",
     "prettier": "^2.7.1",
     "sass": "^1.56.1",
     "start-server-and-test": "^1.14.0",

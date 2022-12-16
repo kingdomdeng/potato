@@ -63,7 +63,13 @@
 
           <div class="container-view">
             <!-- 主内容 -->
-            <router-view/>
+            <router-view v-slot="{ Component }">
+              <transition name="fade-transform" mode="out-in">
+                <!--<keep-alive>-->
+                  <component :is="Component"/>
+                <!--</keep-alive>-->
+              </transition>
+            </router-view>
           </div>
         </el-main>
       </el-container>
@@ -109,10 +115,10 @@ export default {
       this.defaultActive = name
     },
     handleOpen (key, keyPath) {
-      console.log(key, keyPath)
+      // console.log(key, keyPath)
     },
     handleClose (key, keyPath) {
-      console.log(key, keyPath)
+      // console.log(key, keyPath)
     }
   }
 }

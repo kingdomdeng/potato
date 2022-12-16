@@ -33,6 +33,27 @@ body,
   background-color: rgb(144, 147, 153, .5);
 }
 
+/* fade-transform */
+.fade-transform-enter-active {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all .3s ease-out;
+}
+
+.fade-transform-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-transform-leave-active{
+  opacity: 1;
+  transition: all .3s ease-out;
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
 
 .page-container {
   .page-tool {
@@ -44,6 +65,10 @@ body,
 
   .page-content {
 
+    .el-table {
+      border-radius: $br;
+    }
+
     .el-table .el-table__cell {
       padding: 8px 0;
     }
@@ -54,6 +79,54 @@ body,
 
     .el-pagination {
       margin-top: $m;
+    }
+
+    .page-content-tool {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $m/2;
+
+      .tool-left, .tool-right {
+        display: flex;
+      }
+
+      .tool-left {
+        .el-button+.el-button,
+        .el-button + .el-dropdown {
+          margin-left: $m/2;
+        }
+      }
+
+      .tool-right {
+
+      }
+    }
+  }
+
+  .page-search {
+    margin-bottom: $m;
+    padding: $p;
+    padding-bottom: $p/2;;
+    border: $border;
+    border-radius: $br;
+
+    .el-form-item {
+      margin-right: 24px;
+      margin-bottom: $m/2;
+
+      .el-radio, .el-checkbox {
+        margin-right: $m/2;
+      }
+
+      .el-date-editor {
+        width: 320px;
+      }
+
+      .el-select {
+        width: 160px;
+      }
     }
   }
 }

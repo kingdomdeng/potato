@@ -8,8 +8,9 @@
     :modal-class="modalClass"
   >
     <template #header="{ close, titleId, titleClass }">
-      <h4 v-if="!$slots.title">{{ title }}</h4>
-      <slot v-else name="title"></slot>
+      <slot name="title">
+        <h4>{{ title }}</h4>
+      </slot>
 
       <div class="tool">
         <el-button
@@ -268,6 +269,7 @@ export default {
 
       .el-drawer__body {
         padding: $p;
+        overflow: overlay;
       }
     }
   }

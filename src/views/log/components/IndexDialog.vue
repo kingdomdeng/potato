@@ -1,5 +1,5 @@
 <template>
-  <PageDrawer v-model="isShow" title="标题" @close="close">
+  <PageDrawer v-model="isShow" title="标题2333" @close="close">
     <template #title>
       <h4>
         {{ form.userName }}
@@ -163,7 +163,7 @@ export default {
   .page-info-content {
     padding: $p;
     background: #d1dbe5;
-    border-radius: 3px;
+    border-radius: $br;
     height: 100%;
     box-sizing: border-box;
     line-height: normal;
@@ -177,7 +177,7 @@ export default {
       td,th {
         padding: 4px 7px;
         line-height: 23px;
-        border: 1px solid #ebeef5;
+        border: $border;
       }
 
       .label{

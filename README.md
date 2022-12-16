@@ -5,6 +5,19 @@ This template should help get you started developing with Vue 3 in Vite.
 ### node 版本： Vite 需要 Node.js 版本 14.18+，16+
 https://nodejs.org/dist/
 
+### 启动
+```
+#请求服务器
+npm run dev
+
+#拦截本地请求，不请求服务器，mock数据，具体查看 src/configs/mock.js
+npm run mock
+```
+
+### 开启vue devtool卡顿问题
+个人版本：vue v3.2.45, devtool v6.4.5, 谷歌 v108
+devtool开启时，组件会渲染的时间更长(比较明显的，例： el-date-picker)
+
 ### 如果单文件SFC中需要写JSX的语法时，需要加： lang="jsx"
 例子：views/notice/index.vue: getNoticeProgress
 
@@ -59,3 +72,39 @@ https://nodejs.org/dist/
 #### src/utils
 1. 工具类，mixins等
 2. mixin的变量、方法最好带有前缀
+
+#### 全局组件：PageTable、PageTableColumn
+PageTable只是el-table的一个代理，暂时主要做动态表格使用。使用上和el-table一致  
+PS1: 主要增加:tableProps，没有在tableProps里的列默认为显示  
+PS2: tableProps的isShow为控制列的显示  
+```
+<PageTable:data="tableData" :tableProps="tableProps" style="width: 100%" border>
+    <PageTableColumn type="index" label="#" fixed/>
+    <PageTableColumn prop="userName" label="用户名" fixed/>
+    <el-table-column prop="updateTime" label="更新时间" width="180"/> <!-- 可以混用PageTableColumn / el-table-column -->
+    <PageTableColumn label="操作" width="100" fixed="right">
+      <template v-slot="scope">
+        <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">详情</el-button>
+      </template>
+    </PageTableColumn>
+</PageTable>
+
+tableProps： [
+    { name: '用户名', prop: 'userName', fixed: true, default: true, isShow: true },
+    { name: '动作', prop: 'action', fixed: false, default: true, isShow: true },
+    { name: '等级', prop: 'level', fixed: false, default: false, isShow: true },
+]
+
+
+原：
+<el-table :data="tableData" style="width: 100%" border>
+    <el-table-column type="index" label="#" fixed/>
+    <el-table-column prop="userName" label="用户名" fixed/>
+    <el-table-column prop="updateTime" label="更新时间" width="180"/>
+    <el-table-column label="操作" width="100" fixed="right">
+      <template v-slot="scope">
+        <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">详情</el-button>
+      </template>
+    </el-table-column>
+</el-table>
+```
