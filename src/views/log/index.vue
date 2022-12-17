@@ -1,46 +1,28 @@
 <template>
   <div class="page-container page-container-flex">
     <div class="page-content">
-      <PageSearch :model="searchForm" @search="getTableData">
-        <el-form-item prop="userName">
-          <el-input v-model="searchForm.userName" placeholder="用户名"/>
-        </el-form-item>
-
-        <el-form-item prop="device">
-          <el-input v-model="searchForm.device" placeholder="IP/设备"/>
-        </el-form-item>
-
-        <el-form-item prop="action">
-          <el-select v-model="searchForm.action" placeholder="动作">
-            <el-option label="全部" value=""/>
-            <el-option label="add" value="add"/>
-            <el-option label="edit" value="edit"/>
-            <el-option label="delete" value="delete"/>
-            <el-option label="stop" value="stop"/>
-            <el-option label="start" value="start"/>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="等级" prop="level">
-          <el-checkbox-group v-model="searchForm.level">
-            <el-checkbox label="info" name="level" border/>
-            <el-checkbox label="warning" name="level" border/>
-            <el-checkbox label="success" name="level" border/>
-            <el-checkbox label="danger" name="level" border/>
-          </el-checkbox-group>
-        </el-form-item>
-
-        <el-form-item label="时间" prop="datetimeRange">
-          <el-date-picker
-              v-model="searchForm.datetimeRange"
-              type="datetimerange"
-              :shortcuts="datePicker_shortcuts"
-              range-separator="至"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-          />
-        </el-form-item>
-      </PageSearch>
+      <PageSearch
+          :model="searchForm"
+          @search="getTableData"
+          :options="[
+              { label: '用户名', prop: 'userName', type: 'input' },
+              { label: 'IP/设备', prop: 'device', type: 'input' },
+              { label: '动作', prop: 'action', type: 'select', data: [
+                  { label: 'add', value: 'add' },
+                  { label: 'edit', value: 'edit' },
+                  { label: 'delete', value: 'delete' },
+                  { label: 'stop', value: 'stop' },
+                  { label: 'start', value: 'start' },
+              ] },
+              { label: '等级', prop: 'level', type: 'checkbox', data: [
+                  { label: 'info', name: 'level' },
+                  { label: 'warning', name: 'level' },
+                  { label: 'success', name: 'level' },
+                  { label: 'danger', name: 'level' },
+              ] },
+              { label: '时间', prop: 'datetimeRange', type: 'datePicker' },
+          ]"
+      ></PageSearch>
 
       <PageContentTool
           :tableProps="tableProps"
@@ -54,6 +36,7 @@
         <PageTableColumn prop="action" label="动作"/>
         <PageTableColumn prop="level" label="等级"/>
         <PageTableColumn prop="device" label="IP/设备" fixed/>
+        <PageTableColumn prop="num" label="千分位数字" thousands fixed/>
         <PageTableColumn prop="createTime" label="创建时间" width="180"/>
         <!--<el-table-column prop="updateTime" label="更新时间" width="180"/>-->
         <PageTableColumn label="操作" width="100" fixed="right">
@@ -63,15 +46,7 @@
         </PageTableColumn>
       </PageTable>
 
-      <el-pagination
-        :layout="pageMixin_layout"
-        :total="pageMixin_pageTotal"
-        :page-sizes="pageMixin_pageSizes"
-        :page-size="pageMixin_params.pageSize"
-        :current-page="pageMixin_params.pageCurrent"
-        @size-change="$pageMixin_sizeChange"
-        @current-change="$pageMixin_currentChange"
-      />
+      <el-pagination v-bind="pageMixin_pagination" />
     </div>
 
     <IndexDialog v-model="dialogShow" :option="dialogOption"></IndexDialog>
@@ -80,7 +55,6 @@
 
 <script lang="jsx" setup>
 import pageMixin from '@/utils/pageMixin'
-import { datePicker_shortcuts } from '@/utils/datePicker'
 import IndexDialog from '@/views/log/components/IndexDialog'
 </script>
 
@@ -88,7 +62,7 @@ import IndexDialog from '@/views/log/components/IndexDialog'
 export default {
   name: 'Log',
   mixins: [pageMixin],
-  data () {
+  data() {
     return {
       dialogShow: false,
       dialogOption: {},
@@ -109,12 +83,13 @@ export default {
       ],
     }
   },
-  created () {
+  created() {
     this.getTableData()
   },
   methods: {
-    getTableData () {
+    getTableData() {
       let params = {
+        ...this.searchForm,
         ...this.pageMixin_params
       }
 

@@ -65,7 +65,7 @@ export default {
   components: {
     IndexForm
   },
-  data () {
+  data() {
     return {
       appSelected: 1,
       appList: [
@@ -76,11 +76,11 @@ export default {
       indexFormOption: {}
     }
   },
-  created () {
+  created() {
     this.refresh()
   },
   methods: {
-    refresh () {
+    refresh() {
       this.$treeMixin_getAppMenuByAppId(this.appSelected)
 
       this.handleAppend()

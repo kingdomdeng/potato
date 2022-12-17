@@ -1,4 +1,7 @@
 // 组件分页mixin
+/* 推荐使用
+* <el-pagination v-bind="pageMixin_pagination" />
+* */
 
 /* <el-pagination
   :layout="pageMixin_layout"
@@ -38,6 +41,26 @@ export default {
       pageMixin_pageTotal: 0,
       pageMixin_pageFunc: '',
       pageMixin_loading: false,
+    }
+  },
+  computed: {
+    pageMixin_pagination() {
+      return {
+        layout: this.pageMixin_layout,
+        total: this.pageMixin_pageTotal,
+        pageSizes: this.pageMixin_pageSizes,
+        pageSize: this.pageMixin_params.pageSize,
+        currentPage: this.pageMixin_params.pageCurrent,
+        onSizeChange: this.$pageMixin_sizeChange,
+        onCurrentChange: this.$pageMixin_currentChange,
+      }
+    },
+    pageMixin_table() {
+      return {
+        defaultSort: this.pageMixin_defaultSort,
+        onSelectionChange: this.$pageMixin_selection,
+        onSortChange: this.$pageMixin_sort,
+      }
     }
   },
   created() {

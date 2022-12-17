@@ -1,5 +1,37 @@
+<!-- 使用：
+<PageSearch
+    :model="searchForm"
+    @search="getTableData"
+    :options="[
+        { label: '用户名', prop: 'userName', type: 'input' },
+        { label: 'IP/设备', prop: 'device', type: 'input' },
+        { label: '动作', prop: 'action', type: 'select', data: [
+            { label: 'add', value: 'add' },
+            { label: 'edit', value: 'edit' },
+            { label: 'delete', value: 'delete' },
+            { label: 'stop', value: 'stop' },
+            { label: 'start', value: 'start' },
+        ] },
+        { label: '等级', prop: 'level', type: 'checkbox', data: [
+            { label: 'info', name: 'level' },
+            { label: 'warning', name: 'level' },
+            { label: 'success', name: 'level' },
+            { label: 'danger', name: 'level' },
+        ] },
+        { label: '时间', prop: 'datetimerange', type: 'datePicker' },
+    ]"
+>
+
+  <el-form-item prop="test">
+    <el-input v-model="searchForm.test" placeholder="test"/>
+  </el-form-item>
+</PageSearch>
+-->
+
+
 <script lang="jsx">
-import {inject, ref, watch} from "vue";
+import {inject, ref, reactive, watch} from "vue";
+import searchType from "./searchType";
 
 export default {
   name: "PageSearch",
@@ -7,8 +39,15 @@ export default {
     'search',
     'reset',
   ],
+  props: {
+    options: {
+      type: Array,
+      default: [],
+    }
+  },
   setup(props, { attrs, slots, emit }) {
-    let form = ref(null)
+    let formRef = ref(null)
+    let formModel = reactive(attrs.model)
     let attrObj = {
       inline: true,
       ...attrs
@@ -19,13 +58,19 @@ export default {
     }
 
     const onReset = () => {
-      form.value.resetFields()
+      formRef.value.resetFields()
       emit('reset')
     }
 
     return () => (
         <div className="page-search">
-          <el-form ref={form} { ...attrObj } size="small">
+          <el-form ref={formRef} { ...attrObj } size="small">
+            {
+              props.options.map(item => {
+                return searchType[item.type] && searchType[item.type](formModel, item)
+              })
+            }
+
             { slots.default && slots.default() }
 
             <el-form-item>

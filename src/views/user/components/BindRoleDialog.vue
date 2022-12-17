@@ -74,7 +74,7 @@ export default {
     },
     option: Object
   },
-  data () {
+  data() {
     return {
       title: '',
       type: '',
@@ -95,15 +95,15 @@ export default {
     }
   },
   computed: {
-    isAdd () {
+    isAdd() {
       return this.type === 'add'
     },
-    isView () {
+    isView() {
       return this.type === 'view'
     }
   },
   methods: {
-    handleChange () {
+    handleChange() {
       let { appId } = this.option.data
       let roleIds = this.treeMixin_roleSelected.join(',')
 
@@ -111,7 +111,7 @@ export default {
         this.$refs.tree.setCheckedKeys(this.treeMixin_menuSelected)
       })
     },
-    open () {
+    open() {
       // 1.获取应用所有菜单
       // 2.获取角色菜单
       let { appId, userId } = this.option.data
@@ -126,12 +126,12 @@ export default {
       this.$treeMixin_getAppMenuByAppId(appId, true)
       this.$treeMixin_findUserMenu(appId, userId)
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$emit('update:modelValue', false)
     },
-    onSubmit () {
+    onSubmit() {
       let params = {
         appId: this.form.appId,
         userId: this.form.userId,

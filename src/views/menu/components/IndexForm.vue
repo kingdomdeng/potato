@@ -70,7 +70,7 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       type: 'add',
       form: {
@@ -99,22 +99,22 @@ export default {
     },
     'form.appId': {
       immediate: true,
-      handler () {
+      handler() {
         this.getAppMenuByAppId()
       }
     }
   },
   computed: {
-    title () {
+    title() {
       return ACTION_TYPE[this.type]
     },
-    isAdd () {
+    isAdd() {
       return this.type === 'add'
     },
-    isView () {
+    isView() {
       return this.type === 'view'
     },
-    menuListComputed () {
+    menuListComputed() {
       // 过滤本身 & 子孙
       return this.filterDescendant(this.menuList, 'menuId', 'parentId', this.form.menuId)
     }
@@ -132,7 +132,7 @@ export default {
 
       return newList
     },
-    getAppMenuByAppId () {
+    getAppMenuByAppId() {
       if (!this.form.appId) return
 
       let params = {
@@ -158,13 +158,13 @@ export default {
         }
       })
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$refs.form && this.$refs.form.resetFields()
       this.$emit('input', false)
     },
-    onSubmit () {
+    onSubmit() {
       this.verify().then(() => {
         let fn = this.isAdd ? 'create' : 'update'
 

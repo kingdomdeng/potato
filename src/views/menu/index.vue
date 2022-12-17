@@ -19,7 +19,7 @@ export default {
     IndexList,
     IndexTree,
   },
-  data () {
+  data() {
     return {
       activeName: 'tree',
     }

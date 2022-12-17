@@ -42,10 +42,27 @@
 
     <div class="tool-right">
       <el-button-group>
-        <el-button size="small" :icon="Upload" title="上传" @click="handleLoad('upload')"/>
-        <el-button size="small" :icon="Download" title="下载" @click="handleLoad('download')"/>
+        <el-button
+            size="small"
+            :icon="Upload"
+            :disabled="disabledByType('upload')"
+            title="上传"
+            @click="handleLoad('upload')"
+        />
+        <el-button
+            size="small"
+            :icon="Download"
+            :disabled="disabledByType('download')"
+            title="下载"
+            @click="handleLoad('download')"
+        />
         <PageTableProps :modelValue="tableProps">
-          <el-button size="small" :icon="Grid" title="表格控制"/>
+          <el-button
+              size="small"
+              :icon="Grid"
+              :disabled="disabledByType('tableProps')"
+              title="表格控制"
+          />
         </PageTableProps>
       </el-button-group>
     </div>
@@ -64,6 +81,9 @@ export default {
     isDisabledBatch: {
       type: Boolean,
       default: false
+    },
+    uploadLink: {
+      type: String,
     },
     downloadLink: {
       type: String,
@@ -108,6 +128,14 @@ export default {
       if (this.isDisabledBatch && reg.test(type)) return true
 
       return false
+    },
+    disabledByType(type) {
+      let map = {
+        upload: () => !this.uploadLink,
+        download: () => !this.downloadLink,
+        tableProps: () => !this.tableProps.length,
+      }
+      return map[type] ? map[type]() : false
     },
     handleLoad(type) {
       if (type === 'download') {

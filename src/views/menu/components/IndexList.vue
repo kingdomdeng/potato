@@ -11,38 +11,21 @@
     </div>-->
 
     <div class="page-content">
-      <PageSearch :model="searchForm" @search="$pageMixin_search">
-        <el-form-item prop="appId">
-          <el-input v-model="searchForm.appId" placeholder="应用ID"/>
-        </el-form-item>
-
-        <el-form-item prop="name">
-          <el-input v-model="searchForm.name" placeholder="名称"/>
-        </el-form-item>
-
-        <el-form-item prop="remark">
-          <el-input v-model="searchForm.remark" placeholder="备注"/>
-        </el-form-item>
-
-        <el-form-item label="禁用" prop="disabled">
-          <el-radio-group v-model="searchForm.disabled">
-            <el-radio label="全部" name="" border/>
-            <el-radio label="是" name="true" border/>
-            <el-radio label="否" name="false" border/>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="时间" prop="datetimeRange">
-          <el-date-picker
-              v-model="searchForm.datetimeRange"
-              :shortcuts="datePicker_shortcuts"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-          />
-        </el-form-item>
-      </PageSearch>
+      <PageSearch
+          :model="searchForm"
+          @search="$pageMixin_search"
+          :options="[
+              { label: '应用ID', prop: 'appId', type: 'input' },
+              { label: '名称', prop: 'name', type: 'input' },
+              { label: '备注', prop: 'remark', type: 'input' },
+              { label: '禁用', prop: 'disabled', type: 'radio', data: [
+                  { label: '全部', name: '' },
+                  { label: '是', name: 'true' },
+                  { label: '否', name: 'false' },
+              ] },
+              { label: '时间', prop: 'datetimeRange', type: 'datePicker' },
+          ]"
+      ></PageSearch>
 
       <PageContentTool
           :tableProps="tableProps"
@@ -55,9 +38,7 @@
       <PageTable
           :data="tableData"
           :tableProps="tableProps"
-          :default-sort="pageMixin_defaultSort"
-          @selection-change="$pageMixin_selection"
-          @sort-change="$pageMixin_sort"
+          v-bind="pageMixin_table"
           style="width: 100%"
       >
         <PageTableColumn type="selection" width="40" fixed/>
@@ -72,7 +53,7 @@
         <PageTableColumn prop="remark" label="备注" show-overflow-tooltip/>
         <PageTableColumn prop="createTime" label="创建时间" width="180" sortable="custom"/>
         <PageTableColumn prop="updateTime" label="更新时间" width="180" sortable="custom"/>
-       <PageTableColumn label="操作" width="200" fixed="right">
+       <PageTableColumn label="操作" width="150" fixed="right">
           <template v-slot="scope">
             <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">编辑</el-button>
             <el-button type="primary" text size="small" @click="handleDelete(scope.row.menuId)">删除</el-button>
@@ -80,15 +61,7 @@
         </PageTableColumn>
       </PageTable>
 
-      <el-pagination
-        :layout="pageMixin_layout"
-        :total="pageMixin_pageTotal"
-        :page-sizes="pageMixin_pageSizes"
-        :page-size="pageMixin_params.pageSize"
-        :current-page="pageMixin_params.pageCurrent"
-        @size-change="$pageMixin_sizeChange"
-        @current-change="$pageMixin_currentChange"
-      />
+      <el-pagination v-bind="pageMixin_pagination" />
     </div>
 
     <IndexListDialog v-model="dialogShow" :option="dialogOption" @callback="$pageMixin_search"></IndexListDialog>
@@ -97,7 +70,6 @@
 
 <script setup>
 import pageMixin from '@/utils/pageMixin'
-import { datePicker_shortcuts } from '@/utils/datePicker'
 import IndexListDialog from '@/views/menu/components/IndexListDialog'
 </script>
 
@@ -105,7 +77,7 @@ import IndexListDialog from '@/views/menu/components/IndexListDialog'
 export default {
   name: 'IndexList',
   mixins: [pageMixin],
-  data () {
+  data() {
     return {
       dialogShow: false,
       dialogOption: {},
@@ -127,11 +99,11 @@ export default {
       ],
     }
   },
-  created () {
+  created() {
     this.getTableData()
   },
   methods: {
-    getTableData () {
+    getTableData() {
       let params = {
         ...this.searchForm,
         ...this.pageMixin_params

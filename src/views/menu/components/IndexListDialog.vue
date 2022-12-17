@@ -26,7 +26,7 @@ export default {
     },
     option: Object
   },
-  data () {
+  data() {
     return {
       title: '',
       type: '',
@@ -42,15 +42,15 @@ export default {
     },
   },
   computed: {
-    isAdd () {
+    isAdd() {
       return this.type === 'add'
     },
-    isView () {
+    isView() {
       return this.type === 'view'
     },
   },
   methods: {
-    open () {
+    open() {
       this.type = this.option.type
       // this.getAppMenuByAppId()
       // this.form = this.option.data
@@ -59,7 +59,7 @@ export default {
         // this.getData(this.option.data.id)
       }
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$emit('update:modelValue', false)

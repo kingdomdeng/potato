@@ -81,7 +81,7 @@ export default {
     },
     option: Object
   },
-  data () {
+  data() {
     return {
       title: '',
       visible: false,
@@ -126,7 +126,7 @@ export default {
       }
     },
   },
-  created () {
+  created() {
 
   },
   methods: {
@@ -144,7 +144,7 @@ export default {
         }
       })
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$emit('update:modelValue', false)

@@ -43,7 +43,10 @@ import {
 <script>
 export default {
   name: "PageDrawer",
-  emits: ['update:modelValue'],
+  emits: [
+    'update:modelValue',
+    'close',
+  ],
   props: {
     modelValue: {
       type: Boolean,

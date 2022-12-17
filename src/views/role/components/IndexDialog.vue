@@ -50,7 +50,7 @@ export default {
     },
     option: Object
   },
-  data () {
+  data() {
     return {
       title: '',
       type: '',
@@ -72,14 +72,14 @@ export default {
     }
   },
   computed: {
-    isAdd () {
+    isAdd() {
       return this.type === 'add'
     },
-    isView () {
+    isView() {
       return this.type === 'view'
     }
   },
-  created () {
+  created() {
     // 动态创建的首次需要用到
     // this.visible = this.value
     // this.open()
@@ -90,7 +90,7 @@ export default {
         this.form = res.data
       })
     },
-    open () {
+    open() {
       this.type = this.option.type
       // this.form = this.option.data
 
@@ -98,13 +98,13 @@ export default {
         this.getData(this.option.data.id)
       }
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$refs.form && this.$refs.form.resetFields()
       this.$emit('update:modelValue', false)
     },
-    onSubmit () {
+    onSubmit() {
       this.verify().then(() => {
         let fn = this.isAdd ? 'create' : 'update'
 

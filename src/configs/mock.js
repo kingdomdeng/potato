@@ -79,4 +79,5 @@ Mock.mock('/api/log', (options) => wrapper(options, {
   device: '@ip / @pick([\'火狐\',\'谷歌\',\'Safari\'])',
   createTime: '@datetime(yyyy-MM-dd HH:mm:ss)',
   updateTime: '@now(yyyy-MM-dd HH:mm:ss)',
+  num: '@integer(100,5000000000)',
 }));

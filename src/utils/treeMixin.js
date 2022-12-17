@@ -1,6 +1,6 @@
 // menu 树组件
 export default {
-  data () {
+  data() {
     return {
       treeMixin_treeList: [],
       treeMixin_menuSelected: [],

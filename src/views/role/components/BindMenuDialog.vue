@@ -53,7 +53,7 @@ export default {
     },
     option: Object
   },
-  data () {
+  data() {
     return {
       title: '',
       type: '',
@@ -74,15 +74,15 @@ export default {
     }
   },
   computed: {
-    isAdd () {
+    isAdd() {
       return this.type === 'add'
     },
-    isView () {
+    isView() {
       return this.type === 'view'
     }
   },
   methods: {
-    open () {
+    open() {
       // 1.获取应用所有角色
       // 2.获取用户角色
       let { appId, roleId } = this.option.data
@@ -92,12 +92,12 @@ export default {
       this.$treeMixin_getAppMenuByAppId(appId)
       this.$treeMixin_findRoleMenu(appId, roleId)
     },
-    close () {
+    close() {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$emit('update:modelValue', false)
     },
-    onSubmit () {
+    onSubmit() {
       let menuIds = this.$refs.tree.getCheckedKeys()
       let params = {
         appId: this.form.appId,

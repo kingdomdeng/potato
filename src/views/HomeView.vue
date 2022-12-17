@@ -88,7 +88,7 @@ export default {
   components: {
     // HelloWorld
   },
-  data () {
+  data() {
     return {
       defaultActive: 'menu',
       isShowNotice: true,
@@ -106,7 +106,7 @@ export default {
       this.getDefaultActive(route)
     }
   },
-  created () {
+  created() {
     this.getDefaultActive(this.$route)
   },
   methods: {
@@ -157,7 +157,9 @@ export default {
           padding: 15px;
           flex: 1;
           width: 100%;
+          height: 100%;
           box-sizing: border-box;
+          overflow: overlay;
         }
       }
 
