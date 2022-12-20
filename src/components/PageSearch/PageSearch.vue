@@ -31,7 +31,7 @@
 
 <script lang="jsx">
 import {inject, ref, reactive, watch} from "vue";
-import searchType from "./searchType";
+import formCompType from "./formCompType";
 
 export default {
   name: "PageSearch",
@@ -40,6 +40,9 @@ export default {
     'reset',
   ],
   props: {
+    model: {
+      type: Object
+    },
     options: {
       type: Array,
       default: [],
@@ -47,9 +50,11 @@ export default {
   },
   setup(props, { attrs, slots, emit }) {
     let formRef = ref(null)
-    let formModel = reactive(attrs.model)
+    let formModel = props.model // 直接绑定attr.model的话，有可能form重置时，被换了新对象，就监听失败
     let attrObj = {
       inline: true,
+      size: 'small',
+      model: formModel,
       ...attrs
     }
 
@@ -64,10 +69,10 @@ export default {
 
     return () => (
         <div className="page-search">
-          <el-form ref={formRef} { ...attrObj } size="small">
+          <el-form ref={formRef} { ...attrObj }>
             {
               props.options.map(item => {
-                return searchType[item.type] && searchType[item.type](formModel, item)
+                return formCompType[item.type] && formCompType[item.type](formModel, item)
               })
             }
 

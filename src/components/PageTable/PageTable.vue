@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { reactive, provide, watch } from 'vue'
+import { ref, reactive, provide, watch } from 'vue'
 
 export default {
   name: "PageTable",
@@ -9,7 +9,8 @@ export default {
       default: []
     }
   },
-  setup(props, { attrs, slots }) {
+  setup(props, { attrs, slots, expose }) {
+    const table = ref(null)
     let tablePropsMap = reactive({})
     let getMap = (arr) => {
       arr && arr.forEach(item => {
@@ -23,9 +24,12 @@ export default {
 
     getMap(props.tableProps)
     provide('tablePropsMap', tablePropsMap)
+    expose({
+      context: table
+    })
 
     return () => (
-        <el-table v-slots={ slots } { ...attrs } border/>
+        <el-table ref={table} v-slots={ slots } { ...attrs } border/>
     )
   }
 }

@@ -94,7 +94,7 @@ body,
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: $m/2;
+      margin-bottom: calc($m/2);
 
       .tool-left, .tool-right {
         display: flex;
@@ -103,7 +103,7 @@ body,
       .tool-left {
         .el-button+.el-button,
         .el-button + .el-dropdown {
-          margin-left: $m/2;
+          margin-left: calc($m/2);
         }
       }
 
@@ -116,16 +116,16 @@ body,
   .page-search {
     margin-bottom: $m;
     padding: $p;
-    padding-bottom: $p/2;;
+    padding-bottom: calc($p/2);
     border: $border;
     border-radius: $br;
 
     .el-form-item {
       margin-right: 24px;
-      margin-bottom: $m/2;
+      margin-bottom: calc($m/2);
 
       .el-radio, .el-checkbox {
-        margin-right: $m/2;
+        margin-right: calc($m/2);
       }
 
       .el-date-editor {

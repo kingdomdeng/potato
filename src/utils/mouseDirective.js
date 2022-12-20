@@ -31,6 +31,7 @@ function onMouseUp() {
 }
 
 const mouseDirective = {
+  name: 'mouseDirective',
   mounted(el, binding, vnode, prevVnode) {
     let { target, callback } = binding.value
     ctxEL = document.querySelector(target)

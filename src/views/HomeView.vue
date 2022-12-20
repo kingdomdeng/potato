@@ -98,6 +98,8 @@ export default {
         { title: '角色管理', name: 'role', route: { name: 'role' }, icon: 'HelpFilled' },
         { title: '公告管理', name: 'notice', route: { name: 'notice' }, icon: 'Notification' },
         { title: '日志管理', name: 'log', route: { name: 'log' }, icon: 'Notebook' },
+        { title: '流水线', name: 'pipeline', route: { name: 'pipeline' }, icon: 'Operation' },
+        { title: '工单管理', name: 'workOrder', route: { name: 'workOrder' }, icon: 'Tickets' },
       ]
     }
   },

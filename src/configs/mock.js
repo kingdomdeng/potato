@@ -81,3 +81,23 @@ Mock.mock('/api/log', (options) => wrapper(options, {
   updateTime: '@now(yyyy-MM-dd HH:mm:ss)',
   num: '@integer(100,5000000000)',
 }));
+
+Mock.mock('/api/pipeline', (options) => wrapper(options, {
+  name: '@ctitle',
+  development: '@pick([\'prd\',\'pre\',\'test\',\'dev\'])',
+  branch: '@pick([\'main\',\'dev\',\'test\',\'feature\'])',
+  operator: '@cname',
+  status: '@pick([\'starting\',\'running\',\'stopping\',\'stopped\',\'failure\'])',
+  createTime: '@datetime(yyyy-MM-dd HH:mm:ss)',
+  updateTime: '@now(yyyy-MM-dd HH:mm:ss)',
+}));
+
+Mock.mock('/api/pipeline/material', (options) => wrapper(options, {
+  name: '@ctitle',
+  branch: '@pick([\'main\',\'dev\',\'test\',\'feature\'])',
+  operator: '@cname',
+  tag: '@pick([\'tag1\',\'tag2\',\'tag3\',\'tag4\',\'tag5\'])',
+  status: '@pick([\'成功\',\'已禁用\',\'已删除\'])',
+  createTime: '@datetime(yyyy-MM-dd HH:mm:ss)',
+  updateTime: '@now(yyyy-MM-dd HH:mm:ss)',
+}));

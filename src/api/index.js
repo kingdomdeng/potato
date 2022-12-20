@@ -4,6 +4,7 @@ import * as role from './role'
 import * as user from './user'
 import * as notice from './notice'
 import * as log from './log'
+import * as pipeline from './pipeline'
 
 export default {
   // auth,
@@ -12,4 +13,5 @@ export default {
   user,
   notice,
   log,
+  pipeline,
 }

@@ -46,6 +46,7 @@ export default {
   emits: [
     'update:modelValue',
     'close',
+    'resize',
   ],
   props: {
     modelValue: {
@@ -171,6 +172,16 @@ export default {
           : `width: ${ width }px`
 
       ctxEL.setAttribute('style', style)
+
+      let event = new CustomEvent("PageDrawerResize", {
+        bubbles: true,
+        detail: {
+          width,
+          height,
+        }
+      });
+      this.$refs.drawer.$el.dispatchEvent(event);
+      this.$emit('resize')
     },
     handleClose() {
       this.isShow = false

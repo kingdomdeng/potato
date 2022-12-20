@@ -7,7 +7,7 @@
     </template>
 
     <div class="title">
-      <h4>表格属性展示</h4>
+      <h4>自定义列表字段</h4>
 
       <div class="tool">
         <el-button size="small" @click="clean" text>清 空</el-button>
@@ -74,7 +74,7 @@ export default {
   .title {
     display: flex;
     align-items: center;
-    margin-bottom: $m/2;
+    margin-bottom: calc($m/2);
 
     h4 {
       margin: 0;
