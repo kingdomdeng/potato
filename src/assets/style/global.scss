@@ -55,6 +55,15 @@ body,
   transform: translateX(30px);
 }
 
+#nprogress .bar {
+  background-color: rgb(41,60,78, .1);
+  height: 60px;
+}
+
+#nprogress .peg {
+  width: 0px;
+}
+
 .page-container {
   .page-tool {
     display: flex;

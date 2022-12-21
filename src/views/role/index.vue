@@ -44,7 +44,7 @@
         <PageTableColumn prop="updateTime" label="更新时间" width="180" sortable="custom"/>
        <PageTableColumn label="操作" width="150" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" text size="small" @click="openDialog('edit', scope.row.roleId)">编辑</el-button>
+            <el-button type="primary" text size="small" @click="$pageMixin_dialog('dialog', scope.row)">编辑</el-button>
             <el-button type="primary" text size="small" @click="openBindMenuDialog(scope.row)">菜单</el-button>
             <el-button type="primary" text size="small" @click="handleDelete(scope.row.roleId)">删除</el-button>
           </template>
@@ -54,11 +54,7 @@
       <el-pagination v-bind="pageMixin_pagination" />
     </div>
 
-    <IndexDialog
-      v-model="dialogShow"
-      :option="dialogOption"
-      @callback="$pageMixin_search"
-    ></IndexDialog>
+    <IndexDialog ref="dialog" @callback="$pageMixin_search" />
 
     <BindMenuDialog
       v-model="bindRoleDialogShow"
@@ -80,8 +76,6 @@ export default {
   mixins: [pageMixin],
   data() {
     return {
-      dialogShow: false,
-      dialogOption: {},
       bindRoleDialogShow: false,
       bindRoleDialogOption: {},
       searchForm: {
@@ -117,18 +111,9 @@ export default {
         this.$pageMixin_set(res.data.page)
       })
     },
-    openDialog (type, id) {
-      this.dialogShow = true
-      this.dialogOption = {
-        type,
-        data: {
-          id
-        }
-      }
-    },
     handleCommand(command) {
       let map = {
-        add: () => this.openDialog('add'),
+        add: () => this.$pageMixin_dialogAdd('dialog'),
         batchDelete: () => {
           console.log(this.pageMixin_selected)
         }

@@ -1,60 +1,39 @@
 <template>
-  <el-dialog :title="title" v-model="visible" @open="open()" @close="close()">
-    <el-form ref="form" :model="form" :rules="formRules" :disabled="isView" label-width="80px">
-      <el-form-item label="应用名" prop="appId">
-        <el-input v-model="form.appId"></el-input>
-      </el-form-item>
-
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-
-      <el-form-item label="是否禁用">
-        <el-radio-group v-model="form.disabled">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="备注">
-        <el-input type="textarea" v-model="form.remark" :rows="3"></el-input>
-      </el-form-item>
-
-    </el-form>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="close">关 闭</el-button>
-      <el-button v-if="!isView" type="primary" @click="onSubmit()">确 定</el-button>
-    </div>
+  <el-dialog v-bind="dialogMixin_dialog">
+    <PageForm
+        ref="form"
+        :model="form"
+        :rules="formRules"
+        label-width="80px"
+        @confirm="confirm"
+        @close="$dialogMixin_close"
+        :options="[
+            { label: '应用名', prop: 'appId', type: 'input' },
+            { label: '名称', prop: 'name', type: 'input' },
+            { label: '是否禁用', prop: 'disabled', type: 'radio', data: [
+                { label: true, border: false, slots: '是' },
+                { label: false, border: false, slots: '否' },
+            ]},
+            { label: '备注', prop: 'remark', type: 'input',component: { type: 'textarea', row: 3} },
+          ]"
+    ></PageForm>
   </el-dialog>
 </template>
 
 <script setup>
+import dialogMixin from '@/utils/dialogMixin'
 import { formRules } from '../utils/validate'
 </script>
 
 <script>
-const ACTION_TYPE = {
-  'add': '新增',
-  'edit': '编辑',
-  'view': '查看',
-}
-
 export default {
   name: 'indexDialog',
-  emits: ['update:modelValue'],
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false,
-    },
-    option: Object
-  },
+  mixins: [dialogMixin],
+  expose: [
+    'open',
+  ],
   data() {
     return {
-      title: '',
-      type: '',
-      visible: false,
       form: {
         appId: 1,
         name: '',
@@ -63,74 +42,35 @@ export default {
       },
     }
   },
-  watch: {
-    modelValue (val) {
-      this.visible = val
-    },
-    type (val) {
-      this.title = ACTION_TYPE[val]
-    }
-  },
-  computed: {
-    isAdd() {
-      return this.type === 'add'
-    },
-    isView() {
-      return this.type === 'view'
-    }
-  },
   created() {
-    // 动态创建的首次需要用到
-    // this.visible = this.value
-    // this.open()
+
   },
   methods: {
+    confirm() {
+      let fn = this.dialogMixin_isAdd ? 'create' : 'update'
+
+      this.$api.user[fn](this.form).then(res => {
+        this.$message({
+          type: 'success',
+          message: `${this.dialogMixin_title}成功`,
+        })
+        this.$dialogMixin_close()
+        // 刷新列表
+        this.$emit('callback')
+      })
+    },
     getData (id) {
       this.$api.user.info(id).then(res => {
-        this.form = res.data
+        this.$dialogMixin_setForm(res.data)
       })
     },
-    open() {
-      this.type = this.option.type
-      // this.form = this.option.data
+    open({ type, data }) {
+      this.$dialogMixin_open({ type, data })
 
-      if (!this.isAdd) {
-        this.getData(this.option.data.id)
+      if (!this.dialogMixin_isAdd) {
+        this.getData(data.id)
       }
     },
-    close() {
-      // 重置组件数据
-      Object.assign(this.$data, this.$options.data())
-      this.$refs.form && this.$refs.form.resetFields()
-      this.$emit('update:modelValue', false)
-    },
-    onSubmit() {
-      this.verify().then(() => {
-        let fn = this.isAdd ? 'create' : 'update'
-
-        this.$api.user[fn](this.form).then(res => {
-          this.$message({
-            type: 'success',
-            message: `${this.title}成功`,
-          })
-          this.close()
-          // 刷新列表
-          this.$emit('callback')
-        })
-      }).catch(() => {})
-    },
-    verify() {
-      let form = this.$refs.form
-      return new Promise((res, rej) => {
-        form.validate((valid) => {
-          if (valid) {
-            res(true)
-          } else {
-            rej(false)
-          }
-        })
-      })
-    }
   },
 }
 </script>

@@ -1,7 +1,16 @@
 <template>
   <div class="home">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header id="page-header" class="page-header">
+        <div class="logo">
+          potato
+        </div>
+
+        <NavTab class="nav" :options="menuList"></NavTab>
+
+        <div class="centre-tool"></div>
+      </el-header>
+
       <el-container style="height: 100%;overflow: auto">
         <el-aside width="200px">
           <el-row>
@@ -65,9 +74,9 @@
             <!-- 主内容 -->
             <router-view v-slot="{ Component }">
               <transition name="fade-transform" mode="out-in">
-                <!--<keep-alive>-->
+                <keep-alive :max="10" :exclude="aliveExclude">
                   <component :is="Component"/>
-                <!--</keep-alive>-->
+                </keep-alive>
               </transition>
             </router-view>
           </div>
@@ -78,8 +87,10 @@
 </template>
 
 <script setup>
-// import {HelpFilled, User, Notification, Menu, Notebook } from '@element-plus/icons-vue'
+import {Close} from '@element-plus/icons-vue'
 import * as ElementIcon from '@element-plus/icons-vue'
+import NavTab from '@/components/layout/NavTab'
+import { upperFirst, uniq } from 'lodash'
 </script>
 
 <script>
@@ -92,6 +103,7 @@ export default {
     return {
       defaultActive: 'menu',
       isShowNotice: true,
+      aliveExclude: [],
       menuList: [
         { title: '菜单管理', name: 'menu', route: { name: 'menu' }, icon: 'Menu' },
         { title: '用户管理', name: 'user', route: { name: 'user' }, icon: 'User' },
@@ -100,7 +112,8 @@ export default {
         { title: '日志管理', name: 'log', route: { name: 'log' }, icon: 'Notebook' },
         { title: '流水线', name: 'pipeline', route: { name: 'pipeline' }, icon: 'Operation' },
         { title: '工单管理', name: 'workOrder', route: { name: 'workOrder' }, icon: 'Tickets' },
-      ]
+        { title: '配置管理', name: 'config', route: { name: 'workOrder' }, icon: 'Setting' },
+      ],
     }
   },
   watch: {
@@ -115,26 +128,62 @@ export default {
     getDefaultActive (route) {
       let { name } = route
       this.defaultActive = name
+      this.setExclude(route)
+    },
+    setExclude(route) {
+      let { keepAlive, exclude } = route.meta
+
+      if (keepAlive !== undefined && keepAlive === false) {
+        this.aliveExclude = uniq(this.aliveExclude.concat([upperFirst(route.name)]))
+      }
+
+      if (exclude !== undefined && Array.isArray(exclude)) {
+        this.aliveExclude = uniq(this.aliveExclude.concat(exclude))
+      }
     },
     handleOpen (key, keyPath) {
       // console.log(key, keyPath)
     },
     handleClose (key, keyPath) {
       // console.log(key, keyPath)
-    }
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .home {
- :deep() {
-    .el-header {
-      background: #293c4e;
+  :deep() {
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      background: #E6E8EB;
+
+      .logo {
+        padding-left: 30px;
+        width: 200px;
+        height: 100%;
+        color: #fff;
+        background: #293c4e;
+        font-size: 30px;
+        box-sizing: border-box;
+      }
+
+      .nav {
+        flex: 1;
+
+      }
+
+      .centre-tool {
+        width: 200px;
+      }
     }
 
     .el-aside {
       background: #545c64;
+
       .el-menu {
         border-right: none;
       }
@@ -172,7 +221,7 @@ export default {
           left: 0;
           z-index: 9;
 
-         :deep() {
+          :deep() {
             .el-alert__content {
               width: 100%;
             }

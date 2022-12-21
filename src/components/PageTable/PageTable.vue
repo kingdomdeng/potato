@@ -10,7 +10,7 @@ export default {
     }
   },
   setup(props, { attrs, slots, expose }) {
-    const table = ref(null)
+    const tableRef = ref(null)
     let tablePropsMap = reactive({})
     let getMap = (arr) => {
       arr && arr.forEach(item => {
@@ -25,11 +25,11 @@ export default {
     getMap(props.tableProps)
     provide('tablePropsMap', tablePropsMap)
     expose({
-      context: table
+      context: tableRef
     })
 
     return () => (
-        <el-table ref={table} v-slots={ slots } { ...attrs } border/>
+        <el-table ref={tableRef} v-slots={ slots } { ...attrs } border/>
     )
   }
 }

@@ -63,6 +63,10 @@ const ACTION_TYPE = {
 
 export default {
   name: 'IndexForm',
+  expose: [
+    'close',
+    'callback',
+  ],
   props: {
     option: Object,
     showTitle: {
@@ -87,9 +91,6 @@ export default {
     }
   },
   watch: {
-    value (val) {
-      this.visible = val
-    },
     option: {
       deep: true,
       handler (val) {
@@ -149,6 +150,8 @@ export default {
       })
     },
     setForm (data) {
+      if (!data) return
+
       Object.assign(this.$data.form, this.$options.data().form)
 
       Object.keys(data).forEach(attr => {
@@ -162,7 +165,7 @@ export default {
       // 重置组件数据
       Object.assign(this.$data, this.$options.data())
       this.$refs.form && this.$refs.form.resetFields()
-      this.$emit('input', false)
+      this.$emit('close', false)
     },
     onSubmit() {
       this.verify().then(() => {

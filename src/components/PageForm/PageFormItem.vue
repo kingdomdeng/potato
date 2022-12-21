@@ -25,7 +25,7 @@ export default {
     }
 
     return () => (
-        formCompType[attrObj.type] && formCompType[attrObj.type](formModel, attrObj)
+        formCompType[attrObj.type] && formCompType[attrObj.type](formModel.value, attrObj)
     )
   },
 }

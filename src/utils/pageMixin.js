@@ -55,6 +55,7 @@ export default {
         onCurrentChange: this.$pageMixin_currentChange,
       }
     },
+    
     pageMixin_table() {
       return {
         defaultSort: this.pageMixin_defaultSort,
@@ -71,15 +72,18 @@ export default {
       this.pageMixin_params.pageSize = val
       this.pageMixin_pageFunc()
     },
+    
     $pageMixin_currentChange(val) {
       this.pageMixin_params.pageCurrent = val
       this.pageMixin_pageFunc()
     },
+    
     $pageMixin_search() {
       // this.queryParams = {};
       this.pageMixin_params.pageCurrent = 1
       this.pageMixin_pageFunc()
     },
+    
     $pageMixin_set(obj) {
       this.pageMixin_pageTotal = obj.total
       this.pageMixin_params.pageSize = obj.pageSize
@@ -88,14 +92,28 @@ export default {
       // this.pageMixin_params.pageSize = obj.pageSize ?? this.pageMixin_params.pageSize
       // this.pageMixin_params.pageCurrent = obj.pageCurrent ?? this.pageMixin_params.pageCurrent
     },
+    
     $pageMixin_selection(selected) {
       this.pageMixin_selected = selected
     },
+    
     $pageMixin_sort({ column, prop, order }) {
       this.pageMixin_sort.by = prop
       this.pageMixin_sort.order = order && order === 'ascending'
         ? 'ASC'
         : 'DESC'
     },
+    
+    $pageMixin_dialog(ref, data) {
+      this?.$refs[ref]?.open({
+        type: data._type ?? 'edit',
+        data: data ? JSON.parse(JSON.stringify(data)) : {}
+      })
+    },
+    
+    $pageMixin_dialogAdd(ref, data) {
+      this.$pageMixin_dialog(ref, { _type: 'add', data })
+    },
+    
   }
 }

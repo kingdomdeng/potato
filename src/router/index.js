@@ -6,6 +6,8 @@ import role from '@/views/role/router'
 import notice from '@/views/notice/router'
 import log from '@/views/log/router'
 import pipeline from '@/views/pipeline/router'
+import NProgress from 'NProgress'
+import 'NProgress/nprogress.css'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +35,25 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
+})
+
+NProgress.configure({
+  speed: 500,
+  showSpinner: false,
+});
+
+router.beforeEach((to, from, next) => {
+  if (from.fullPath !== '/') {
+    NProgress.start()
+  }
+  
+  next()
+})
+
+router.afterEach(() => {
+  setTimeout(() => {
+    NProgress.done()
+  }, 200)
 })
 
 export default router

@@ -16,6 +16,7 @@
     "axios": "^1.2.1",
     "element-plus": "^2.2.26",
     "lodash": "^4.17.21",
+    "nprogress": "^0.2.0",
     "pinia": "^2.0.26",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",

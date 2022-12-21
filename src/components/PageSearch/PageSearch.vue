@@ -30,7 +30,7 @@
 
 
 <script lang="jsx">
-import {inject, ref, reactive, watch} from "vue";
+import {ref, watch, toRefs} from "vue";
 import formCompType from "./formCompType";
 
 export default {
@@ -43,20 +43,27 @@ export default {
     model: {
       type: Object
     },
-    options: {
+    options: { // TODO: 需要响应式、监听
       type: Array,
       default: [],
     }
   },
   setup(props, { attrs, slots, emit }) {
+    const { model } = toRefs(props) // 直接使用props.model不是响应式，具体看api toRefs
     let formRef = ref(null)
-    let formModel = props.model // 直接绑定attr.model的话，有可能form重置时，被换了新对象，就监听失败
+    let formModel = ref(null) // 使用reactive需要一个个赋值，ref则直接赋值到value
+    formModel.value = model.value
+
     let attrObj = {
       inline: true,
       size: 'small',
       model: formModel,
       ...attrs
     }
+
+    watch(model, (val) => {
+      formModel.value = val
+    }, { deep: true })
 
     const onSearch = () => {
       emit('search')
@@ -72,7 +79,7 @@ export default {
           <el-form ref={formRef} { ...attrObj }>
             {
               props.options.map(item => {
-                return formCompType[item.type] && formCompType[item.type](formModel, item)
+                return formCompType[item.type] && formCompType[item.type](formModel.value, item)
               })
             }
 

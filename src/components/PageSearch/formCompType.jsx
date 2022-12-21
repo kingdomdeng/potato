@@ -48,7 +48,11 @@ export function radio(model, attr) {
     <el-radio-group v-model={model[attr.prop]} {...attr.component}>
       {
         attr.data.map(item => {
-          return  <el-radio key={item.label} {...item} border/>
+          return  (
+            <el-radio border key={item.label} {...item}>
+              { item.slots ? item.slots : null }
+            </el-radio>
+          )
         })
       }
     </el-radio-group>
@@ -65,7 +69,11 @@ export function checkbox(model, attr) {
     <el-checkbox-group v-model={model[attr.prop]} {...attr.component}>
       {
         attr.data.map(item => {
-          return  <el-checkbox key={item.label} {...item} border/>
+          return (
+            <el-checkbox border key={item.label} {...item}>
+              { item.slots ? item.slots : null }
+            </el-checkbox>
+          )
         })
       }
     </el-checkbox-group>

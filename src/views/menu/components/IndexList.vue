@@ -1,7 +1,6 @@
 <template>
   <div class="page-container">
     <!--<div class="page-tool">
-      <el-button type="primary" @click="openDialog('add')">新增</el-button>
       <el-link
         type="primary"
         href="/api/menu/download"
@@ -55,7 +54,7 @@
         <PageTableColumn prop="updateTime" label="更新时间" width="180" sortable="custom"/>
        <PageTableColumn label="操作" width="150" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" text size="small" @click="openDialog('edit', scope.row)">编辑</el-button>
+            <el-button type="primary" text size="small" @click="$pageMixin_dialog('dialog', scope.row)">编辑</el-button>
             <el-button type="primary" text size="small" @click="handleDelete(scope.row.menuId)">删除</el-button>
           </template>
         </PageTableColumn>
@@ -64,7 +63,7 @@
       <el-pagination v-bind="pageMixin_pagination" />
     </div>
 
-    <IndexListDialog v-model="dialogShow" :option="dialogOption" @callback="$pageMixin_search"></IndexListDialog>
+    <IndexListDialog ref="dialog" @callback="$pageMixin_search" />
   </div>
 </template>
 
@@ -79,8 +78,6 @@ export default {
   mixins: [pageMixin],
   data() {
     return {
-      dialogShow: false,
-      dialogOption: {},
       searchForm: {
         appId: '',
         name: '',
@@ -114,18 +111,9 @@ export default {
         this.$pageMixin_set(res.data.page)
       })
     },
-    openDialog (type, obj) {
-      this.dialogShow = true
-      this.dialogOption = {
-        type,
-        data: {
-          ...obj
-        }
-      }
-    },
     handleCommand(command) {
       let map = {
-        add: () => this.openDialog('add'),
+        add: () => this.$pageMixin_dialogAdd('dialog'),
         batchDelete: () => {
           console.log(this.pageMixin_selected)
         }
